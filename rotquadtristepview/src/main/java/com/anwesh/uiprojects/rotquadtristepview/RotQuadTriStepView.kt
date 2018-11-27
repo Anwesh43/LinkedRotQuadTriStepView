@@ -220,4 +220,12 @@ class RotQuadTriStepView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : RotQuadTriStepView {
+            val view : RotQuadTriStepView = RotQuadTriStepView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
