@@ -26,7 +26,7 @@ fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.getInverse() + scaleFactor() * b.getInverse()
 
-fun Float.updateScale(dir : Int, a : Int, b : Int) : Float = mirrorValue(a, b) * scGap * dir
+fun Float.updateScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * scGap * dir
 
 fun Canvas.drawRQTSNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
@@ -43,8 +43,8 @@ fun Canvas.drawRQTSNode(i : Int, scale : Float, paint : Paint) {
     save()
     translate(gap * (i + 1), h/2)
     paint.style = Paint.Style.STROKE
-    drawRect(RectF(-size, -size, size, size), paint)
     rotate(90f * sc2)
+    drawRect(RectF(-size, -size, size, size), paint)
     for (j in 0..(tris - 1)) {
         val sc : Float = sc1.divideScale(j, tris)
         paint.style = Paint.Style.FILL
@@ -82,7 +82,7 @@ class RotQuadTriStepView(ctx : Context) : View(ctx) {
     data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
 
         fun update(cb : (Float) -> Unit) {
-            scale += 0.05f * dir
+            scale += scale.updateScale(dir, tris, 1)
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
