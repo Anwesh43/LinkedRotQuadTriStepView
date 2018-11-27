@@ -6,12 +6,9 @@ package com.anwesh.uiprojects.rotquadtristepview
 
 import android.view.View
 import android.view.MotionEvent
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Color
-import android.graphics.Path
 import android.app.Activity
 import android.content.Context
+import android.graphics.*
 
 val nodes : Int = 5
 val tris : Int = 4
@@ -30,3 +27,35 @@ fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.getInverse() + scaleFactor() * b.getInverse()
 
 fun Float.updateScale(dir : Int, a : Int, b : Int) : Float = mirrorValue(a, b) * scGap * dir
+
+fun Canvas.drawRQTSNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    val size : Float = gap / sizeFactor
+    val ws : Float = size / 5
+    val hs : Float = size
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = color
+    save()
+    translate(gap * (i + 1), h/2)
+    paint.style = Paint.Style.STROKE
+    drawRect(RectF(-size, -size, size, size), paint)
+    rotate(90f * sc2)
+    for (j in 0..(tris - 1)) {
+        val sc : Float = sc1.divideScale(j, tris)
+        paint.style = Paint.Style.FILL
+        save()
+        rotate(90f * j)
+        val path : Path = Path()
+        path.moveTo(0f, 0f)
+        path.lineTo(-ws * sc, -hs * sc)
+        path.lineTo(ws * sc, -hs * sc)
+        drawPath(path, paint)
+        restore()
+    }
+    restore()
+}
