@@ -195,4 +195,27 @@ class RotQuadTriStepView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : RotQuadTriStepView) {
+
+        private val animator : Animator = Animator(view)
+
+        private val rqts : RotQuadTriStep = RotQuadTriStep(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            rqts.draw(canvas, paint)
+            animator.animate {
+                rqts.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            rqts.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
