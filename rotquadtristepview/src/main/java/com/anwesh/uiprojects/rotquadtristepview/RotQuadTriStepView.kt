@@ -17,6 +17,7 @@ val scDiv : Double = 0.51
 val color : Int = Color.parseColor("#0D47A1")
 val sizeFactor : Float = 2.5f
 val strokeFactor : Int = 120
+val DELAY : Long = 25
 
 fun Int.getInverse() : Float = 1f / this
 
@@ -105,7 +106,7 @@ class RotQuadTriStepView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(DELAY)
                     view.invalidate()
                 } catch (ex : Exception) {
 
